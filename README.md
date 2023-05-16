@@ -12,7 +12,7 @@
 - https://dumps.tadiphone.dev/dumps/motorola/pstar user-13-T1RA33.55-15-10-72f29-release-keys
 
 ## Screenshots
-- 
+- https://t.me/androidryukimods/1063
 
 ## Requirements
 - Architecture arm64 or arm
@@ -22,7 +22,7 @@
 
 ## Installation Guide & Download Link
 - Install Moto Core Magisk Module first: https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
-- Install this module via Magisk app or KernelSU app or Recovery (unless you are using KernelSU)
+- Install this module https://www.pling.com/p/2035774/ via Magisk app or KernelSU app or Recovery (unless you are using KernelSU)
 - Install AML Magisk Module https://t.me/androidryukimodsdiscussions/29836 only if using any other audio mod module
 - Reboot
 - Open Moto Audio app via quick settings and tap 'Show icon in the app tray' to show Moto Audio app icon launcher
