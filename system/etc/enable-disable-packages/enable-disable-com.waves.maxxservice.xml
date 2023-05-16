@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <enable-disable-package>
-    <package-disable-enable-criteria package="com.motorola.motowaves" default_action="enable">
+    <package-disable-enable-criteria package="com.waves.maxxservice" default_action="enable">
         <criteria action="enable" prop="persist.vendor.audio_fx.force_waves_enabled" prop_value="true"/>
         <criteria action="enable" channel="vzw"/>
         <criteria action="enable" channel="vzwpre"/>
