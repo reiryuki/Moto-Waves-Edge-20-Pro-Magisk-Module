@@ -1,61 +1,64 @@
-MODPATH=${0%/*}
+[ -z $MODPATH ] && MODPATH=${0%/*}
 
 # destination
 LIBPATH="\/vendor\/lib\/soundfx"
-MODAEC=`find $MODPATH/system -type f -name *audio*effects*.conf`
-MODAEX=`find $MODPATH/system -type f -name *audio*effects*.xml`
-MODAP=`find $MODPATH/system -type f -name *policy*.conf -o -name *policy*.xml`
+MODAEC=`find $MODPATH -type f -name *audio*effects*.conf`
+MODAEX=`find $MODPATH -type f -name *audio*effects*.xml`
+MODAP=`find $MODPATH -type f -name *policy*.conf -o -name *policy*.xml`
 
 # function
 remove_conf() {
-for RMVS in $RMV; do
-  sed -i "s/$RMVS/removed/g" $MODAEC
+for RMV in $RMVS; do
+  sed -i "s|$RMV|removed|g" $MODAEC
 done
-sed -i 's/path \/vendor\/lib\/soundfx\/removed//g' $MODAEC
-sed -i 's/path \/system\/lib\/soundfx\/removed//g' $MODAEC
-sed -i 's/path \/vendor\/lib\/removed//g' $MODAEC
-sed -i 's/path \/system\/lib\/removed//g' $MODAEC
-sed -i 's/library removed//g' $MODAEC
-sed -i 's/uuid removed//g' $MODAEC
+sed -i 's|path /vendor/lib/soundfx/removed||g' $MODAEC
+sed -i 's|path /system/lib/soundfx/removed||g' $MODAEC
+sed -i 's|path /vendor/lib/removed||g' $MODAEC
+sed -i 's|path /system/lib/removed||g' $MODAEC
+sed -i 's|library removed||g' $MODAEC
+sed -i 's|uuid removed||g' $MODAEC
 sed -i "/^        removed {/ {;N s/        removed {\n        }//}" $MODAEC
+sed -i 's|removed { }||g' $MODAEC
+sed -i 's|removed {}||g' $MODAEC
 }
 remove_xml() {
-for RMVS in $RMV; do
-  sed -i "s/\"$RMVS\"/\"removed\"/g" $MODAEX
+for RMV in $RMVS; do
+  sed -i "s|\"$RMV\"|\"removed\"|g" $MODAEX
 done
-sed -i 's/<library name="removed" path="removed"\/>//g' $MODAEX
-sed -i 's/<library name="proxy" path="removed"\/>//g' $MODAEX
-sed -i 's/<effect name="removed" library="removed" uuid="removed"\/>//g' $MODAEX
-sed -i 's/<effect name="removed" uuid="removed" library="removed"\/>//g' $MODAEX
-sed -i 's/<libsw library="removed" uuid="removed"\/>//g' $MODAEX
-sed -i 's/<libhw library="removed" uuid="removed"\/>//g' $MODAEX
-sed -i 's/<apply effect="removed"\/>//g' $MODAEX
-sed -i 's/<library name="removed" path="removed" \/>//g' $MODAEX
-sed -i 's/<library name="proxy" path="removed" \/>//g' $MODAEX
-sed -i 's/<effect name="removed" library="removed" uuid="removed" \/>//g' $MODAEX
-sed -i 's/<effect name="removed" uuid="removed" library="removed" \/>//g' $MODAEX
-sed -i 's/<libsw library="removed" uuid="removed" \/>//g' $MODAEX
-sed -i 's/<libhw library="removed" uuid="removed" \/>//g' $MODAEX
-sed -i 's/<apply effect="removed" \/>//g' $MODAEX
+sed -i 's|<library name="removed" path="removed"/>||g' $MODAEX
+sed -i 's|<library name="proxy" path="removed"/>||g' $MODAEX
+sed -i 's|<effect name="removed" library="removed" uuid="removed"/>||g' $MODAEX
+sed -i 's|<effect name="removed" uuid="removed" library="removed"/>||g' $MODAEX
+sed -i 's|<libsw library="removed" uuid="removed"/>||g' $MODAEX
+sed -i 's|<libhw library="removed" uuid="removed"/>||g' $MODAEX
+sed -i 's|<apply effect="removed"/>||g' $MODAEX
+sed -i 's|<library name="removed" path="removed" />||g' $MODAEX
+sed -i 's|<library name="proxy" path="removed" />||g' $MODAEX
+sed -i 's|<effect name="removed" library="removed" uuid="removed" />||g' $MODAEX
+sed -i 's|<effect name="removed" uuid="removed" library="removed" />||g' $MODAEX
+sed -i 's|<libsw library="removed" uuid="removed" />||g' $MODAEX
+sed -i 's|<libhw library="removed" uuid="removed" />||g' $MODAEX
+sed -i 's|<apply effect="removed" />||g' $MODAEX
 }
 
 # store
-RMV="ring_helper alarm_helper music_helper voice_helper
-     notification_helper ma_ring_helper ma_alarm_helper
-     ma_music_helper ma_voice_helper ma_system_helper
-     ma_notification_helper sa3d fens lmfv dirac dtsaudio
-     dlb_music_listener dlb_ring_listener dlb_alarm_listener
-     dlb_system_listener dlb_notification_listener"
+RMVS="ring_helper alarm_helper music_helper voice_helper
+      notification_helper ma_ring_helper ma_alarm_helper
+      ma_music_helper ma_voice_helper ma_system_helper
+      ma_notification_helper sa3d fens lmfv dirac dtsaudio
+      dlb_music_listener dlb_ring_listener dlb_alarm_listener
+      dlb_system_listener dlb_notification_listener"
 
 # setup audio effects conf
 if [ "$MODAEC" ]; then
-  for RMVS in $RMV; do
-    sed -i "/^        $RMVS {/ {;N s/        $RMVS {\n        }//}" $MODAEC
-    sed -i "s/$RMVS { }//g" $MODAEC
-    sed -i "s/$RMVS {}//g" $MODAEC
+  for RMV in $RMVS; do
+    sed -i "/^        $RMV {/ {;N s/        $RMV {\n        }//}" $MODAEC
+    sed -i "s|$RMV { }||g" $MODAEC
+    sed -i "s|$RMV {}||g" $MODAEC
   done
   if ! grep -q '^output_session_processing {' $MODAEC; then
     sed -i -e '$a\
+\
 output_session_processing {\
     music {\
     }\
@@ -94,9 +97,9 @@ fi
 
 # setup audio effects xml
 if [ "$MODAEX" ]; then
-  for RMVS in $RMV; do
-    sed -i "s/<apply effect=\"$RMVS\"\/>//g" $MODAEX
-    sed -i "s/<apply effect=\"$RMVS\" \/>//g" $MODAEX
+  for RMV in $RMVS; do
+    sed -i "s|<apply effect=\"$RMV\"/>||g" $MODAEX
+    sed -i "s|<apply effect=\"$RMV\" />||g" $MODAEX
   done
   if ! grep -q '<postprocess>' $MODAEX\
   || grep -q '<!-- Audio post processor' $MODAEX; then
@@ -150,7 +153,7 @@ LIB=libmaxxeffect-cembedded.so
 LIBNAME=maxxaudio3
 NAME=maxxaudio3
 UUID=ae12da60-99ac-11df-b456-0002a5d5c51b
-RMV="$LIB $LIBNAME $NAME $UUID"
+RMVS="$LIB $LIBNAME $NAME $UUID"
 
 # patch audio effects conf
 if [ "$MODAEC" ]; then
@@ -180,8 +183,13 @@ fi
 
 # patch audio policy
 #uif [ "$MODAP" ]; then
-#u  sed -i 's/RAW/NONE/g' $MODAP
-#u  sed -i 's/,raw//g' $MODAP
+#u  sed -i 's|RAW|NONE|g' $MODAP
+#u  sed -i 's|,raw||g' $MODAP
 #ufi
+
+
+
+
+
 
 

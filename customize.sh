@@ -49,6 +49,40 @@ for DIR in $DIRS; do
   umount $DIR
 done
 }
+mount_odm_to_mirror() {
+DIR=/odm
+if [ -d $DIR ]; then
+  ui_print "- Mount $MIRROR$DIR..."
+  mkdir -p $MIRROR$DIR
+  if mount_mirror $DIR $MIRROR$DIR; then
+    ui_print "  $MIRROR$DIR mount success"
+  else
+    ui_print "  ! $MIRROR$DIR mount failed"
+    rm -rf $MIRROR$DIR
+    if [ -d $MIRROR/system_root$DIR ]; then
+      ln -sf $MIRROR/system_root$DIR $MIRROR
+    fi
+  fi
+  ui_print " "
+fi
+}
+mount_my_product_to_mirror() {
+DIR=/my_product
+if [ -d $DIR ]; then
+  ui_print "- Mount $MIRROR$DIR..."
+  mkdir -p $MIRROR$DIR
+  if mount_mirror $DIR $MIRROR$DIR; then
+    ui_print "  $MIRROR$DIR mount success"
+  else
+    ui_print "  ! $MIRROR$DIR mount failed"
+    rm -rf $MIRROR$DIR
+    if [ -d $MIRROR/system_root$DIR ]; then
+      ln -sf $MIRROR/system_root$DIR $MIRROR
+    fi
+  fi
+  ui_print " "
+fi
+}
 mount_partitions_to_mirror() {
 unmount_mirror
 # mount system
@@ -60,7 +94,6 @@ if [ "$SYSTEM_ROOT" == true ]; then
     ui_print "  $MIRROR$DIR mount success"
     rm -rf $MIRROR/system
     ln -sf $MIRROR$DIR/system $MIRROR
-    ls $MIRROR$DIR
   else
     ui_print "  ! $MIRROR$DIR mount failed"
     rm -rf $MIRROR$DIR
@@ -71,7 +104,6 @@ else
   mkdir -p $MIRROR$DIR
   if mount_mirror $DIR $MIRROR$DIR; then
     ui_print "  $MIRROR$DIR mount success"
-    ls $MIRROR$DIR
   else
     ui_print "  ! $MIRROR$DIR mount failed"
     rm -rf $MIRROR$DIR
@@ -84,7 +116,6 @@ ui_print "- Mount $MIRROR$DIR..."
 mkdir -p $MIRROR$DIR
 if mount_mirror $DIR $MIRROR$DIR; then
   ui_print "  $MIRROR$DIR mount success"
-  ls $MIRROR$DIR
 else
   ui_print "  ! $MIRROR$DIR mount failed"
   rm -rf $MIRROR$DIR
@@ -97,7 +128,6 @@ ui_print "- Mount $MIRROR$DIR..."
 mkdir -p $MIRROR$DIR
 if mount_mirror $DIR $MIRROR$DIR; then
   ui_print "  $MIRROR$DIR mount success"
-  ls $MIRROR$DIR
 else
   ui_print "  ! $MIRROR$DIR mount failed"
   rm -rf $MIRROR$DIR
@@ -110,7 +140,6 @@ ui_print "- Mount $MIRROR$DIR..."
 mkdir -p $MIRROR$DIR
 if mount_mirror $DIR $MIRROR$DIR; then
   ui_print "  $MIRROR$DIR mount success"
-  ls $MIRROR$DIR
 else
   ui_print "  ! $MIRROR$DIR mount failed"
   rm -rf $MIRROR$DIR
@@ -119,36 +148,8 @@ else
   fi
 fi
 ui_print " "
-# mount odm
-DIR=/odm
-ui_print "- Mount $MIRROR$DIR..."
-mkdir -p $MIRROR$DIR
-if mount_mirror $DIR $MIRROR$DIR; then
-  ui_print "  $MIRROR$DIR mount success"
-  ls $MIRROR$DIR
-else
-  ui_print "  ! $MIRROR$DIR mount failed"
-  rm -rf $MIRROR$DIR
-  if [ -d $MIRROR/system_root$DIR ]; then
-    ln -sf $MIRROR/system_root$DIR $MIRROR
-  fi
-fi
-ui_print " "
-# mount my_product
-DIR=/my_product
-ui_print "- Mount $MIRROR$DIR..."
-mkdir -p $MIRROR$DIR
-if mount_mirror $DIR $MIRROR$DIR; then
-  ui_print "  $MIRROR$DIR mount success"
-  ls $MIRROR$DIR
-else
-  ui_print "  ! $MIRROR$DIR mount failed"
-  rm -rf $MIRROR$DIR
-  if [ -d $MIRROR/system_root$DIR ]; then
-    ln -sf $MIRROR/system_root$DIR $MIRROR
-  fi
-fi
-ui_print " "
+mount_odm_to_mirror
+mount_my_product_to_mirror
 }
 
 # architecture
@@ -181,10 +182,12 @@ ui_print " "
 MAGISKPATH=`magisk --path`
 if [ "$BOOTMODE" == true ]; then
   if [ "$MAGISKPATH" ]; then
+    mount -o rw,remount $MAGISKPATH
     MAGISKTMP=$MAGISKPATH/.magisk
     MIRROR=$MAGISKTMP/mirror
   else
     MAGISKTMP=/mnt
+    mount -o rw,remount $MAGISKTMP
     MIRROR=$MAGISKTMP/mirror
     mount_partitions_to_mirror
   fi
@@ -195,16 +198,16 @@ SYSTEM=`realpath $MIRROR/system`
 PRODUCT=`realpath $MIRROR/product`
 VENDOR=`realpath $MIRROR/vendor`
 SYSTEM_EXT=`realpath $MIRROR/system_ext`
-if [ -d $MIRROR/odm ]; then
-  ODM=`realpath $MIRROR/odm`
-else
-  ODM=`realpath /odm`
+if [ "$BOOTMODE" == true ]; then
+  if [ ! -d $MIRROR/odm ]; then
+    mount_odm_to_mirror
+  fi
+  if [ ! -d $MIRROR/my_product ]; then
+    mount_my_product_to_mirror
+  fi
 fi
-if [ -d $MIRROR/my_product ]; then
-  MY_PRODUCT=`realpath $MIRROR/my_product`
-else
-  MY_PRODUCT=`realpath /my_product`
-fi
+ODM=`realpath $MIRROR/odm`
+MY_PRODUCT=`realpath $MIRROR/my_product`
 
 # optionals
 OPTIONALS=/sdcard/optionals.prop
@@ -287,11 +290,16 @@ ui_print " "
 }
 
 # check
+if [ "$IS64BIT" == true ]; then
+  FOL=lib64
+else
+  FOL=lib
+fi
 NAME=_ZN7android23sp_report_stack_pointerEv
 DES=libwavesaudio_effectwrapper.so
 FILE=`find $MODPATH/system -type f -name $DES`
-LISTS=`strings $FILE | grep ^lib | grep .so | sed "s/$DES//" | sed 's/libc++_shared.so//'`
-FILE=`for LIST in $LISTS; do echo $SYSTEM/lib/$LIST; done`
+LISTS=`strings $FILE | grep ^lib | grep .so | sed -e "s|$DES||g" -e 's|libc++_shared.so||g'`
+FILE=`for LIST in $LISTS; do echo $SYSTEM/$FOL/$LIST; done`
 check_function
 
 # remove
@@ -412,13 +420,13 @@ fi
 # function
 hide_oat() {
 for APPS in $APP; do
-  export REPLACE="$REPLACE
+  REPLACE="$REPLACE
   `find $MODPATH/system -type d -name $APPS | sed "s|$MODPATH||"`/oat"
 done
 }
 replace_dir() {
 if [ -d $DIR ]; then
-  export REPLACE="$REPLACE $MODDIR"
+  REPLACE="$REPLACE $MODDIR"
 fi
 }
 hide_app() {
@@ -548,13 +556,9 @@ else
   sed -i 's/#u//g' $FILE
 fi
 
-# permission
-ui_print "- Setting permission..."
-DIR=`find $MODPATH/system/vendor -type d`
-for DIRS in $DIR; do
-  chown 0.2000 $DIRS
-done
-ui_print " "
+# run
+. $MODPATH/copy.sh
+. $MODPATH/.aml.sh
 
 # unmount
 if [ "$BOOTMODE" == true ] && [ ! "$MAGISKPATH" ]; then

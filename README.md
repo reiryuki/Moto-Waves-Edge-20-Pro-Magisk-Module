@@ -16,7 +16,7 @@
 
 ## Requirements
 - Architecture arm64 or arm
-- Android 8 or above (Android 12.1 and bellow is not tested)
+- Android 11 or above
 - Magisk or KernelSU installed
 - Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
 
@@ -40,6 +40,10 @@
 
 ## Tested on
 - Android 13 CrDroid ROM
+
+## Known Issues
+- Doesn't work with bluetooth audio
+- Doesn't work in Pixel 6 Android 13 stock ROM
 
 ## Credits and contributors
 - https://t.me/viperatmos
