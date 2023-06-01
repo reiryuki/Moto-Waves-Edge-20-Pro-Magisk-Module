@@ -42,18 +42,6 @@ fi
 
 # run
 . $MODPATH/copy.sh
-
-# conflict
-AML=/data/adb/modules/aml
-ACDB=/data/adb/modules/acdb
-if [ -d $ACDB ] && [ ! -f $ACDB/disable ]; then
-  if [ ! -d $AML ] || [ -f $AML/disable ]; then
-    rm -f `find $MODPATH/system/etc $MODPATH/vendor/etc\
-     $MODPATH/system/vendor/etc -maxdepth 1 -type f -name $AUD`
-  fi
-fi
-
-# run
 . $MODPATH/.aml.sh
 
 # directory

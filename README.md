@@ -25,6 +25,7 @@
 - Install this module https://www.pling.com/p/2035774/ via Magisk app or KernelSU app or Recovery (unless you are using KernelSU)
 - Install AML Magisk Module https://t.me/androidryukimodsdiscussions/29836 only if using any other audio mod module
 - Reboot
+- If you are using KernelSU, you need to allow superuser list manually all package name listed in package.txt and reboot after
 - Open Moto Audio app via quick settings and tap 'Show icon in the app tray' to show Moto Audio app icon launcher
 - Tap 'About' then tap multiple times the image if you want to disable FX for loudspeaker
 
