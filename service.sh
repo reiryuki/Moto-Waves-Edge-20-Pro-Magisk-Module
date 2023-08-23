@@ -1,11 +1,12 @@
 MODPATH=${0%/*}
 API=`getprop ro.build.version.sdk`
 
-# debug
+# log
 exec 2>$MODPATH/debug.log
 set -x
 
 # properties
+resetprop ro.audio.ignore_effects false
 resetprop vendor.audio.feature.maxx_audio.enable false
 resetprop -p --delete persist.vendor.audio_fx.current
 resetprop -n persist.vendor.audio_fx.current waves
@@ -85,9 +86,6 @@ done
 # function
 grant_permission() {
 appops set $PKG SYSTEM_ALERT_WINDOW allow
-if [ "$API" -ge 33 ]; then
-  pm grant $PKG android.permission.POST_NOTIFICATIONS
-fi
 if [ "$API" -ge 31 ]; then
   pm grant $PKG android.permission.BLUETOOTH_CONNECT
 fi
@@ -95,7 +93,7 @@ if [ "$API" -ge 30 ]; then
   appops set $PKG AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore
 fi
 PKGOPS=`appops get $PKG`
-UID=`dumpsys package $PKG 2>/dev/null | grep -m 1 userId= | sed 's/    userId=//'`
+UID=`dumpsys package $PKG 2>/dev/null | grep -m 1 userId= | sed 's|    userId=||g'`
 if [ "$UID" -gt 9999 ]; then
   UIDOPS=`appops get --uid "$UID"`
 fi
@@ -103,6 +101,9 @@ fi
 
 # grant
 PKG=com.motorola.motowaves
+if [ "$API" -ge 33 ]; then
+  pm grant $PKG android.permission.POST_NOTIFICATIONS
+fi
 grant_permission
 
 # grant
@@ -112,7 +113,7 @@ grant_permission
 # function
 stop_log() {
 FILE=$MODPATH/debug.log
-SIZE=`du $FILE | sed "s|$FILE||"`
+SIZE=`du $FILE | sed "s|$FILE||g"`
 if [ "$LOG" != stopped ] && [ "$SIZE" -gt 50 ]; then
   exec 2>/dev/null
   LOG=stopped
