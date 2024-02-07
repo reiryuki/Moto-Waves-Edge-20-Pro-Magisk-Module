@@ -454,14 +454,20 @@ NAME=libadspd.so
 APP=MotoWavesV2
 if [ "$IS64BIT" == true ]; then
   DIR=`find $MODPATH/system -type d -name $APP`/lib/arm64
-  if [ ! -f $SYSTEM/lib64/$NAME ]; then
+  if [ -f $SYSTEM/lib64/$NAME ]; then
+    rm -f $DIR/$NAME
+  elif [ -f $VENDOR/lib64/$NAME ]; then
     cp -f $VENDOR/lib64/$NAME $DIR
+  elif [ -f $ODM/lib64/$NAME ]; then
     cp -f $ODM/lib64/$NAME $DIR
   fi
 fi
 DIR=`find $MODPATH/system -type d -name $APP`/lib/arm
-if [ ! -f $SYSTEM/lib/$NAME ]; then
+if [ -f $SYSTEM/lib/$NAME ]; then
+  rm -f $DIR/$NAME
+elif [ -f $VENDOR/lib/$NAME ]; then
   cp -f $VENDOR/lib/$NAME $DIR
+elif [ -f $ODM/lib/$NAME ]; then
   cp -f $ODM/lib/$NAME $DIR
 fi
 
