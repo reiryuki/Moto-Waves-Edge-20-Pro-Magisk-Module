@@ -10,6 +10,7 @@
 
 ## Sources
 - https://dumps.tadiphone.dev/dumps/motorola/pstar user-13-T1RA33.55-15-10-72f29-release-keys
+- system_support: LineageOS ROM Android 14
 
 ## Screenshots
 - https://t.me/androidryukimods/1063
@@ -43,6 +44,7 @@
 
 ## Tested on
 - Android 13 CrDroid ROM
+- Android 14 LineageOS ROM
 
 ## Known Issues
 - Doesn't work with Bluetooth audio in ROM that doesn't support A2DP offload

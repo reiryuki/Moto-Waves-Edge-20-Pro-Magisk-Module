@@ -1,16 +1,23 @@
 # space
 ui_print " "
 
+# var
+UID=`id -u`
+LIST32BIT=`grep_get_prop ro.product.cpu.abilist32`
+if [ ! "$LIST32BIT" ]; then
+  LIST32BIT=`grep_get_prop ro.system.product.cpu.abilist32`
+fi
+
 # log
 if [ "$BOOTMODE" != true ]; then
-  FILE=/sdcard/$MODID\_recovery.log
+  FILE=/data/media/"$UID"/$MODID\_recovery.log
   ui_print "- Log will be saved at $FILE"
   exec 2>$FILE
   ui_print " "
 fi
 
 # optionals
-OPTIONALS=/sdcard/optionals.prop
+OPTIONALS=/data/media/"$UID"/optionals.prop
 if [ ! -f $OPTIONALS ]; then
   touch $OPTIONALS
 fi
@@ -20,12 +27,6 @@ if [ "`grep_prop debug.log $OPTIONALS`" == 1 ]; then
   ui_print "- The install log will contain detailed information"
   set -x
   ui_print " "
-fi
-
-# var
-LIST32BIT=`grep_get_prop ro.product.cpu.abilist32`
-if [ ! "$LIST32BIT" ]; then
-  LIST32BIT=`grep_get_prop ro.system.product.cpu.abilist32`
 fi
 
 # run
@@ -99,23 +100,6 @@ magisk_setup
 
 # path
 SYSTEM=`realpath $MIRROR/system`
-if [ "$BOOTMODE" == true ]; then
-  if [ ! -d $MIRROR/vendor ]; then
-    mount_vendor_to_mirror
-  fi
-  if [ ! -d $MIRROR/product ]; then
-    mount_product_to_mirror
-  fi
-  if [ ! -d $MIRROR/system_ext ]; then
-    mount_system_ext_to_mirror
-  fi
-  if [ ! -d $MIRROR/odm ]; then
-    mount_odm_to_mirror
-  fi
-  if [ ! -d $MIRROR/my_product ]; then
-    mount_my_product_to_mirror
-  fi
-fi
 VENDOR=`realpath $MIRROR/vendor`
 PRODUCT=`realpath $MIRROR/product`
 SYSTEM_EXT=`realpath $MIRROR/system_ext`
@@ -136,7 +120,7 @@ mv -f $MODPATH/aml.sh $MODPATH/.aml.sh
 # mod ui
 if [ "`grep_prop mod.ui $OPTIONALS`" == 1 ]; then
   APP=MotoWavesV2
-  FILE=/sdcard/$APP.apk
+  FILE=/data/media/"$UID"/$APP.apk
   DIR=`find $MODPATH/system -type d -name $APP`
   ui_print "- Using modified UI apk..."
   if [ -f $FILE ]; then
@@ -175,33 +159,34 @@ extract_lib
 
 # function
 check_function() {
-ui_print "- Checking"
-ui_print "$NAME"
-ui_print "  function at"
-ui_print "$FILE"
-ui_print "  Please wait..."
-if ! grep -q $NAME $FILE; then
-  ui_print "  ! Function not found."
-  ui_print "    Unsupported ROM."
-  if [ "$BOOTMODE" == true ] && [ ! "$MAGISKPATH" ]; then
-    unmount_mirror
+if [ -f $MODPATH/system_support$DIR/$LIB ]; then
+  ui_print "- Checking"
+  ui_print "$NAME"
+  ui_print "  function at"
+  ui_print "$FILE"
+  ui_print "  Please wait..."
+  if ! grep -q $NAME $FILE; then
+    ui_print "  Function not found."
+    ui_print "  Replaces /system$DIR/$LIB."
+    mv -f $MODPATH/system_support$DIR/$LIB $MODPATH/system$DIR
+    [ "$MES" ] && ui_print "$MES"
   fi
-  abort
+  ui_print " "
 fi
-ui_print " "
 }
 
 # check
-if [ "$IS64BIT" == true ]; then
-  FOL=lib64
-else
-  FOL=lib
-fi
 NAME=_ZN7android23sp_report_stack_pointerEv
+LIB=libutils.so
+if [ "$IS64BIT" == true ]; then
+  DIR=/lib64
+else
+  DIR=/lib
+fi
 DES=libwavesaudio_effectwrapper.so
 FILE=`find $MODPATH/system -type f -name $DES`
 LISTS=`strings $FILE | grep ^lib | grep .so | sed -e "s|$DES||g" -e 's|libc++_shared.so||g'`
-FILE=`for LIST in $LISTS; do echo $SYSTEM/$FOL/$LIST; done`
+FILE=`for LIST in $LISTS; do echo $SYSTEM$DIR/$LIST; done`
 check_function
 
 # remove
@@ -467,34 +452,43 @@ fi
 # check
 NAME=libadspd.so
 APP=MotoWavesV2
-DIR=`find $MODPATH/system -type d -name $APP`/lib/arm
-cp -f $SYSTEM/lib/$NAME $DIR
-cp -f $VENDOR/lib/$NAME $DIR
-cp -f $ODM/lib/$NAME $DIR
 if [ "$IS64BIT" == true ]; then
   DIR=`find $MODPATH/system -type d -name $APP`/lib/arm64
-  cp -f $SYSTEM/lib64/$NAME $DIR
-  cp -f $VENDOR/lib64/$NAME $DIR
-  cp -f $ODM/lib64/$NAME $DIR
+  if [ ! -f $SYSTEM/lib64/$NAME ]; then
+    cp -f $VENDOR/lib64/$NAME $DIR
+    cp -f $ODM/lib64/$NAME $DIR
+  fi
+fi
+DIR=`find $MODPATH/system -type d -name $APP`/lib/arm
+if [ ! -f $SYSTEM/lib/$NAME ]; then
+  cp -f $VENDOR/lib/$NAME $DIR
+  cp -f $ODM/lib/$NAME $DIR
 fi
 
-# check
-NAMES=libc++_shared.so
-for NAME in $NAMES; do
-  FILE=$VENDOR/lib/$NAME
-  if [ -f $FILE ]; then
-    ui_print "- Detected $NAME"
+# function
+file_check_vendor() {
+for FILE in $FILES; do
+  DES=$VENDOR$FILE
+  DES2=$ODM$FILE
+  if [ -f $DES ] || [ -f $DES2 ]; then
+    ui_print "- Detected $FILE"
     ui_print " "
-    rm -f $MODPATH/system/vendor/lib/$NAME
+    rm -f $MODPATH/system/vendor$FILE
   fi
 done
+}
+
+# check
+FILES=/lib/libc++_shared.so
+file_check_vendor
 
 # audio rotation
 FILE=$MODPATH/service.sh
 if [ "`grep_prop audio.rotation $OPTIONALS`" == 1 ]; then
   ui_print "- Enables ro.audio.monitorRotation=true"
   sed -i '1i\
-resetprop ro.audio.monitorRotation true' $FILE
+resetprop -n ro.audio.monitorRotation true\
+resetprop -n ro.audio.monitorWindowRotation true' $FILE
   ui_print " "
 fi
 
@@ -512,9 +506,7 @@ fi
 . $MODPATH/.aml.sh
 
 # unmount
-if [ "$BOOTMODE" == true ] && [ ! "$MAGISKPATH" ]; then
-  unmount_mirror
-fi
+unmount_mirror
 
 
 
