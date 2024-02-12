@@ -73,7 +73,7 @@ fi
 NUM=26
 if [ "$API" -lt $NUM ]; then
   ui_print "! Unsupported SDK $API. You have to upgrade your Android"
-  ui_print "  version at least SDK API $NUM to use this module."
+  ui_print "  version at least SDK $NUM to use this module."
   abort
 else
   ui_print "- SDK $API"
@@ -188,9 +188,8 @@ FILE=`find $MODPATH/system -type f -name $DES`
 LISTS=`strings $FILE | grep ^lib | grep .so | sed -e "s|$DES||g" -e 's|libc++_shared.so||g'`
 FILE=`for LIST in $LISTS; do echo $SYSTEM$DIR/$LIST; done`
 check_function
-
-# remove
-rm -rf `find $MODPATH/system -type d -name WavesServiceV2`/lib
+rm -rf `find $MODPATH/system -type d -name WavesServiceV2`/lib\
+ $MODPATH/system_support
 
 # cleaning
 ui_print "- Cleaning..."
