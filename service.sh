@@ -120,6 +120,7 @@ fi
 PKG=com.motorola.motowaves
 if [ "$API" -ge 33 ]; then
   pm grant $PKG android.permission.POST_NOTIFICATIONS
+  appops set $PKG ACCESS_RESTRICTED_SETTINGS allow
 fi
 grant_permission
 
