@@ -17,9 +17,9 @@
 - https://t.me/androidryukimods/1063
 
 ## Requirements
-- ARM or ARM64 architecture
+- armeabi-v7a or arm64-v8a architecture
 - 32 bit audio service (this also can be found in 64 bit ROM with 32 bit support, not only 32 bit ROM)
-- Android 11 or above
+- Android 11 (SDK 30) or above
 - Magisk or KernelSU installed
 - Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
 - Bluetooth A2DP offload ROM support for Bluetooth audio
@@ -45,20 +45,17 @@
 - https://t.me/androidryukimodsdiscussions/2618
 - If you don't do above, issues will be closed immediately
 
-## Tested on
-- Android 13 CrDroid ROM
-- Android 14 LineageOS ROM QPR1 (UQ1A) & QPR3 (AP2A)
-
 ## Known Issues
 - Doesn't work with Bluetooth audio in ROM that doesn't support A2DP offload
 - Doesn't work in Android 14 initial release (UP1A) nor QPR2 (AP1A)
 
 ## Credits and Contributors
+- @HuskyDG
 - https://t.me/viperatmos
 - https://t.me/androidryukimodsdiscussions
 - You can contribute ideas about this Magisk Module here: https://t.me/androidappsportdevelopment
 
 ## Sponsors
-- https://t.me/androidryukimodsdiscussions/2619
+- https://t.me/ryukinotes/25
 
 
