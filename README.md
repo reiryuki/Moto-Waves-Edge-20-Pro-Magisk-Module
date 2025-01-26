@@ -19,7 +19,7 @@
 ## Requirements
 - armeabi-v7a or arm64-v8a architecture
 - 32 bit audio service (this also can be found in 64 bit ROM with 32 bit support, not only 32 bit ROM)
-- Android 11 (SDK 30) or above
+- Android 11 (SDK 30) until 14 (SDK 34) only
 - Magisk or KernelSU installed
 - Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
 - Bluetooth A2DP offload ROM support for Bluetooth audio
@@ -27,7 +27,7 @@
 ## Installation Guide & Download Link
 - Install Moto Core Magisk Module first: https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
 - Install this module https://www.pling.com/p/2035774/ via Magisk app or KernelSU app or Recovery if Magisk installed
-- Install AML Magisk Module https://t.me/androidryukimodsdiscussions/29836 only if using any other else audio mod module
+- Install AML Magisk Module https://t.me/ryukinotes/34 only if using any other else audio mod module
 - If you are using KernelSU, you need to disable Unmount Modules by Default in KernelSU app settings
 - Reboot
 - If you are using KernelSU, you need to allow superuser list manually all package name listed in package.txt (and your home launcher app also) (enable show system apps) and reboot afterwards
@@ -35,19 +35,22 @@
 - Open Moto Audio app via quick settings and tap 'Show icon in the app tray' to show Moto Audio app icon launcher
 - Tap 'About' then tap multiple times the image if you want to disable effect for loudspeaker
 
-## Optionals & Troubleshootings
-- https://t.me/androidryukimodsdiscussions/3081
-- Global: https://t.me/androidryukimodsdiscussions/60861
-- Global: https://t.me/androidryukimodsdiscussions/29836
-- Stream: https://t.me/androidryukimodsdiscussions/26764
+## Optionals
+- https://t.me/ryukinotes/59
+- Global: https://t.me/ryukinotes/35
+- Stream: https://t.me/ryukinotes/52
+
+## Troubleshootings
+- https://t.me/ryukinotes/59
+- Global: https://t.me/ryukinotes/34
 
 ## Support & Bug Report
-- https://t.me/androidryukimodsdiscussions/2618
+- https://t.me/ryukinotes/54
 - If you don't do above, issues will be closed immediately
 
 ## Known Issues
 - Doesn't work with Bluetooth audio in ROM that doesn't support A2DP offload
-- Doesn't work in Android 14 initial release (UP1A) nor QPR2 (AP1A)
+- Doesn't work in Android 14 (SDK 34) initial release (UP1A) nor QPR2 (AP1A)
 
 ## Credits and Contributors
 - @HuskyDG
