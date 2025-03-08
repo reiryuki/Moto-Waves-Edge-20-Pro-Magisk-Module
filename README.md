@@ -25,6 +25,7 @@
 - Bluetooth A2DP offload ROM support for Bluetooth audio
 
 ## Installation Guide & Download Link
+- Remove any other else Moto Waves MAGISK MODULE with different name and reboot first (No need to remove if it's the same name)
 - Install Moto Core Magisk Module first: https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
 - Install this module https://www.pling.com/p/2035774/ via Magisk app or KernelSU app or Recovery if Magisk installed
 - Install AML Magisk Module https://t.me/ryukinotes/34 only if using any other else audio mod module
@@ -51,6 +52,7 @@
 ## Known Issues
 - Doesn't work with Bluetooth audio in ROM that doesn't support A2DP offload
 - Doesn't work in Android 14 (SDK 34) initial release (UP1A) nor QPR2 (AP1A)
+- Looks like blobs not compatible with Android 11 (SDK 30)
 
 ## Credits and Contributors
 - @HuskyDG
