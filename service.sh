@@ -101,11 +101,8 @@ else
 fi
 
 # function
-grant_permission() {
+appops_set() {
 appops set $PKG SYSTEM_ALERT_WINDOW allow
-if [ "$API" -ge 31 ]; then
-  pm grant $PKG android.permission.BLUETOOTH_CONNECT
-fi
 if [ "$API" -ge 30 ]; then
   appops set $PKG AUTO_REVOKE_PERMISSIONS_IF_UNUSED ignore
 fi
@@ -118,15 +115,20 @@ fi
 
 # grant
 PKG=com.motorola.motowaves
-if [ "$API" -ge 33 ]; then
-  pm grant $PKG android.permission.POST_NOTIFICATIONS
-  appops set $PKG ACCESS_RESTRICTED_SETTINGS allow
+if appops get $PKG > /dev/null 2>&1; then
+  pm grant --all-permissions $PKG
+  if [ "$API" -ge 33 ]; then
+    appops set $PKG ACCESS_RESTRICTED_SETTINGS allow
+  fi
+  appops_set
 fi
-grant_permission
 
 # grant
 PKG=com.waves.maxxservice
-grant_permission
+if appops get $PKG > /dev/null 2>&1; then
+  pm grant --all-permissions $PKG
+  appops_set
+fi
 
 # audio flinger
 #DMAF=`dumpsys media.audio_flinger`
