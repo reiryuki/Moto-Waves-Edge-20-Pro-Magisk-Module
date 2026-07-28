@@ -9,11 +9,17 @@
 - Global type sound effect
 
 ## Sources
-- https://dumps.tadiphone.dev/dumps/motorola/pstar user-13-T1RA33.55-15-10-72f29-release-keys
+- https://dumps.tadiphone.dev/dumps/motorola/pstar user-13-T1RAA33.39-11-2-ef936f-release-keys
 - system_support: LineageOS ROM Android 14
 - libmagiskpolicy.so: Magisk (stable) 30.7 (30700)
 
 ## Changelog
+
+v1.6
+- Update apps from user-13-T1RAA33.39-11-2-ef936f-release-keys
+- Using original maxx_conf.ini
+- Check functions in mirror /apex files instead of mirror /system if exist
+- Fix file permission & sepolicy denial
 
 v1.5
 - Support NoMount metamodule
@@ -59,20 +65,10 @@ v0.8
 - Fix conflict with modules_update while installing via recovery if Magisk installed
 - Fix architecture detection
 - Fix MagiskHide & SUList
-- Fix selinux denials
+- Fix sepolicy denials
 
 v0.7
 - Add miui.intent.action.HEADSET_SETTINGS
-
-v0.6
-- Fix installation failure caused by function not found
-- Fix a fatal exception & auto reboot in Android 14
-- Redirect /sdcard to /data/media/"$UID"
-- Add new Magisk and Kitsune Mask support (independent mirror)
-- Remount partitions before mounting mirror to prevent mount failure caused by device/resource busy
-- Sets system property ro.audio.monitorWindowRotation=true if audio.rotation=1 at optionals.prop
-- Fix MagiskHide & SUList
-- Kitsune Mask detection
 
 ## Screenshots
 https://t.me/androidryukimods/1063
@@ -80,7 +76,7 @@ https://t.me/androidryukimods/1063
 ## Requirements
 - armeabi-v7a or arm64-v8a with armeabi-v7a support architecture
 - 32 bit HIDL audio service
-- Android 11 (SDK 30) until 14 (SDK 34) only
+- Android 11 (SDK 30) and up
 - Magisk or Kitsune Mask or KernelSU or Apatch installed
 - Moto Core Magisk Module installed https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
 - Bluetooth A2DP offload ROM support for Bluetooth audio
@@ -89,7 +85,7 @@ https://t.me/androidryukimods/1063
 - If you are using KernelSU, you need to disable Unmount Modules by Default in KernelSU app settings and install https://github.com/KernelSU-Modules-Repo/meta-overlayfs or https://github.com/KernelSU-Modules-Repo/magic_mount_rs or https://github.com/KernelSU-Modules-Repo/hybrid_mount or https://github.com/maxsteeel/nomount first depending on ROM compatibility
 - Remove any other else Moto Waves MAGISK MODULE with different name and reboot first (No need to remove if it's the same name)
 - Install Moto Core Magisk Module first: https://github.com/reiryuki/Moto-Core-Magisk-Module except you are in Motorola ROM
-- Install this module https://devuploads.com/0me7aac5m3d7 via Magisk app or Kitsune Mask app or KernelSU app or Apatch app or Recovery if Magisk or Kitsune Mask installed
+- Install this module https://github.com/reiryuki/Moto-Waves-Edge-20-Pro-Magisk-Module via Magisk app or Kitsune Mask app or KernelSU app or Apatch app or Recovery if Magisk or Kitsune Mask installed
 - Install AML Magisk Module https://t.me/ryukinotes/34 only if using any other else audio mod module
 - Reboot
 - If you are using KernelSU, you need to allow superuser list manually all package name listed in package.txt (and your home launcher app also) (enable show system apps) and reboot afterwards
@@ -113,13 +109,14 @@ https://t.me/androidryukimods/1063
 ## Known Issues
 - Doesn't work with Bluetooth audio in ROM that doesn't support A2DP offload
 - Doesn't work in Android 14 (SDK 34) initial release (UP1A) nor QPR2 (AP1A)
+- Doesn't work in Android 15
 - Looks like blobs not compatible with Android 11 (SDK 30)
 
 ## Credits and Contributors
 - @HuskyDG
 - https://t.me/viperatmos
 - https://t.me/androidryukimodsdiscussions
-- You can contribute ideas about this Magisk Module here: https://t.me/androidappsportdevelopment
+- https://t.me/androidappsportdevelopment
 
 ## Sponsors
 https://t.me/ryukinotes/25
