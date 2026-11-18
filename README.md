@@ -28,9 +28,9 @@ Equalizer global type sound effect ported from Motorola Edge 20 Pro (pstar) and 
 
 ## Download Links and Changelog
 
-v1.7 Original UI https://github.com/reiryuki/Moto-Waves-Edge-20-Pro-Magisk-Module
+v1.7 Original UI https://move2link.co/02a8739
 
-v1.7 New UI https://github.com/reiryuki/Moto-Waves-Edge-20-Pro-Magisk-Module
+v1.7 New UI https://move2link.co/2a90aaa
 
 - Update libmagiskpolicy.so from Magisk (debug) 31.0 (31000)
 - Prepare /storage/emulated/"$UID"/Android/data/$PKG/ directories
