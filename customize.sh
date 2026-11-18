@@ -216,7 +216,6 @@ if [ "`grep_prop mod.ui $OPTIONALS`" == 1 ]; then
   ui_print "- Using modified UI apk..."
   if [ -f $FILE ]; then
     cp -f $FILE $DIR
-    chmod 0644 $DIR/$APP.apk
     ui_print "  Applied"
   else
     ui_print "  ! There is no $FILE file."
@@ -600,6 +599,17 @@ MODSYSTEM=/system
 
 # unmount
 unmount_mirror
+
+# prepare
+PKG=com.motorola.motowaves
+DIR=/storage/emulated/"$UID"/Android/data/$PKG/files
+DIR2=/storage/emulated/"$UID"/Android/data/$PKG/cache
+ui_print "- Creating directories:"
+ui_print "  $DIR"
+mkdir -p $DIR
+ui_print "  $DIR2"
+mkdir -p $DIR2
+ui_print " "
 
 
 

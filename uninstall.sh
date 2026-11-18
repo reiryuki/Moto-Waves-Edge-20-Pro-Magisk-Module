@@ -29,11 +29,3 @@ resetprop -p --delete persist.vendor.audio_fx.waves.systrace
 resetprop -p --delete persist.vendor.audio_fx.force_waves_enabled
 
 
-
-
-
-
-
-
-
-
