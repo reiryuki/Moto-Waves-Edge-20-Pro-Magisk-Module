@@ -44,7 +44,7 @@ v1.6 https://move2link.co/e193348
 
 v1.5
 - Support NoMount metamodule
-- Update libmagiskpolicy.so from Magisk (debug) 30.7 (30700)
+- Update libmagiskpolicy.so from Magisk (stable) 30.7 (30700)
 - Resets module folders/files permissions at post-fs-data
 - Move _uninstall.log to /data/adb/logs/
 - Removes conflicted weird modules
